@@ -1,0 +1,32 @@
+{if $settings.yamoney_payment_type || $settings.card_payment_type}
+    {if $settings.yamoney_payment_type}
+        <div class="yamoney-payment-type">
+            {if $settings.yamoney_payment_title}
+                <h3>{$settings.yamoney_payment_title|escape}</h3>
+            {/if}
+            <iframe frameborder="0" 
+                    allowtransparency="true" 
+                    scrolling="no" 
+                    src="https://money.yandex.ru/embed/small.xml?account={$settings.account|escape}&quickpay=small&yamoney-payment-type=on&button-text={$settings.button_text|escape}&button-size={$settings.button_size|escape}&button-color={$settings.button_color|escape}&targets={$settings.targets|default:''|escape}&default-sum={$settings.default_sum|default:0|escape}&successURL=&label={$settings.label|default:''|escape}" 
+                    width="228" 
+                    height="54">
+            </iframe>
+        </div>
+    {/if}
+
+    {if $settings.card_payment_type}
+        <div class="any-card-payment-type">
+            {if $settings.card_payment_title}
+                <h3>{$settings.card_payment_title|escape}</h3>
+            {/if}
+            <iframe frameborder="0" 
+                    allowtransparency="true" 
+                    scrolling="no" 
+                    src="https://money.yandex.ru/embed/small.xml?account={$settings.account|escape}&quickpay=small&any-card-payment-type=on&button-text={$settings.button_text|escape}&button-size={$settings.button_size|escape}&button-color={$settings.button_color|escape}&targets={$settings.targets|default:''|escape}&default-sum={$settings.default_sum|default:0|escape}&successURL=&label={$settings.label|default:''|escape}" 
+                    width="228" 
+                    height="54">
+            </iframe>
+        </div>
+    {/if}
+    {$settings.description}
+{/if}

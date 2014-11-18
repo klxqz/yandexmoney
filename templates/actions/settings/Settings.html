@@ -1,0 +1,188 @@
+<script>
+    $(function() {
+        $('#plugins-settings-form').change(function() {
+            $(this).submit();
+            $('#field_preview').append('<div id="div-loading"><i class="icon16 loading"></i>[`Loading...`]</div>');
+            setTimeout(function() {
+                $('#widget_preview').attr('src', '?plugin=yandexmoney&action=preview&' + Math.random());
+                $('#div-loading').remove();
+            }, 1000);
+        });
+    });
+</script>
+
+<h1>Яндекс.Деньги</h1>
+<div class="fields form">
+    <form action="?module=plugins&id=yandexmoney&action=save" method="post" id="plugins-settings-form">
+        {$wa->csrf()}
+
+
+        {literal}
+            <p>{shopYandexmoneyPlugin::display()} - Код хелпера вывода</p>
+            <p>{shopYandexmoneyPlugin::display($order.id)} - Код хелпера вывода с передачей номера заказа, для размещения в личном кабинете</p>
+        {/literal}
+
+        <div class="field">
+            <div class="name">
+                Статус плагина
+            </div>
+            <div class="value">
+                <select name="shop_yandexmoney[status]">
+                    <option {if $settings.status == 1} selected="selected"{/if} value="1">Включен</option>
+                    <option {if $settings.status == 0} selected="selected"{/if} value="0">Выключен</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Вывод по умолчанию
+            </div>
+            <div class="value">
+                <select name="shop_yandexmoney[default_out]">
+                    <option {if $settings.default_out == 1} selected="selected"{/if} value="1">Включен</option>
+                    <option {if $settings.default_out == 0} selected="selected"{/if} value="0">Выключен</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="name">
+                Номер Вашего кошелька
+            </div>
+            <div class="value">
+                <input type="text" name="shop_yandexmoney[account]" value="{$settings.account|escape}"  />
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Тип кнопки
+            </div>
+            <div class="value">
+                <p>
+                    <input type="hidden"  name="shop_yandexmoney[yamoney_payment_type]" value="" />
+                    <input type="checkbox" {if $settings.yamoney_payment_type}checked="checked"{/if} name="shop_yandexmoney[yamoney_payment_type]" value="on" /> - для платежей из кошелька Яндекс.Деньги<br/>
+                    Заголовок:
+                    <input type="text" name="shop_yandexmoney[yamoney_payment_title]" value="{$settings.yamoney_payment_title|escape}"  /><br/>
+                    Связанный способ оплаты:
+                    <select name="shop_yandexmoney[yamoney_payment_id]">
+                        <option value="0" >Любой</option>
+                        {foreach $instances as $id => $plugin}
+                            <option {if $settings.yamoney_payment_id == $plugin.id}selected="selected"{/if} value="{$plugin.id}" >{$plugin.name|escape}{if empty($plugin.status)}([`disabled`]){/if}</option>
+                        {/foreach}
+                    </select>
+                </p>
+                <p>
+                    <input type="hidden"  name="shop_yandexmoney[card_payment_type]" value="" />
+                    <input type="checkbox" {if $settings.card_payment_type}checked="checked"{/if} name="shop_yandexmoney[card_payment_type]" value="on" /> - для платежей с карт Visa и MasterCard<br/>
+                    Заголовок:
+                    <input type="text" name="shop_yandexmoney[card_payment_title]" value="{$settings.card_payment_title|escape}"  /><br/>
+                    Связанный способ оплаты:
+                    <select name="shop_yandexmoney[card_payment_id]">
+                        <option value="0" >Любой</option>
+                        {foreach $instances as $id => $plugin}
+                            <option {if $settings.card_payment_id == $plugin.id}selected="selected"{/if} value="{$plugin.id}" >{$plugin.name|escape}{if empty($plugin.status)}([`disabled`]){/if}</option>
+                        {/foreach}
+                    </select>
+                </p>
+            </div>
+        </div>
+
+
+
+        <div class="field">
+            <div class="name">
+                Текст на кнопке
+            </div>
+            <div class="value">
+                <select name="shop_yandexmoney[button_text]">
+                    <option {if $settings.button_text == '01'} selected="selected"{/if} value="01">Оплатить</option>
+                    <option {if $settings.button_text == '02'} selected="selected"{/if} value="02">Купить</option>
+                    <option {if $settings.button_text == '03'} selected="selected"{/if} value="03">Перевести</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Размер
+            </div>
+            <div class="value">
+                <select name="shop_yandexmoney[button_size]">
+                    <option {if $settings.button_size == 's'} selected="selected"{/if} value="s">S</option>
+                    <option {if $settings.button_size == 'm'} selected="selected"{/if} value="m">M</option>
+                    <option {if $settings.button_size == 'l'} selected="selected"{/if} value="l">L</option>
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Цвет
+            </div>
+            <div class="value">
+                <select name="shop_yandexmoney[button_color]">
+                    <option {if $settings.button_color == 'orange'} selected="selected"{/if} value="orange">оранжевый</option>
+                    <option {if $settings.button_color == 'white'} selected="selected"{/if} value="white">белый</option>
+                    <option {if $settings.button_color == 'black'} selected="selected"{/if} value="black">черный</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Наценка(в процентах), компенсирующая комиссию
+            </div>
+            <div class="value">
+                <input type="text" name="shop_yandexmoney[margin]" value="{$settings.margin|escape}"  />
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Описание для покупателя, выводимое под кнопкой оплаты
+            </div>
+            <div class="value">
+                <textarea name="shop_yandexmoney[description]">{$settings.description|escape}</textarea>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Поддержка валюты отличной от РУБЛЯ(RUB)
+            </div>
+            <div class="value">
+                <p>
+                    <input type="radio" {if $settings.support_currency == '0'}checked="checked"{/if} name="shop_yandexmoney[support_currency]" value="0" /> - Поддержка отсутствует. Если валюта заказа отличается от RUB, то кнопка оплаты не выводится.
+                </p>
+                <p>
+                    <input type="radio" {if $settings.support_currency == 'shop'}checked="checked"{/if} name="shop_yandexmoney[support_currency]" value="shop" /> - Конвертация валюты с использованием настроек интернет-магазина. 
+                </p>
+                <p>
+                    <input type="radio" {if $settings.support_currency == 'koef'}checked="checked"{/if} name="shop_yandexmoney[support_currency]" value="koef" /> - Конвертация валюты с использованием указанного коэффициента. <br/>
+                    <input type="text" name="shop_yandexmoney[currency_koef]" value="{$settings.currency_koef|escape}"  /> - коэффициент, используемый при конвертации валюты.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="name">
+                Предпросмотр
+            </div>
+            <div class="value" id="field_preview">
+                <iframe width="300" height="350" scrolling="no" frameborder="0" id="widget_preview" src="?plugin=yandexmoney&action=preview"></iframe>
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="value submit">
+                <input type="submit" class="button green" value="Сохранить">
+                <span id="plugins-settings-form-status" style="display:none">
+                    <i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
+                </span>
+            </div>
+        </div>
+    </form>
+</div>
